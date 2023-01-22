@@ -350,6 +350,7 @@ public class CodegenConstants {
     public static final String PARENT_VERSION_DESC = "parent version in generated pom N.B. parentGroupId, parentArtifactId and parentVersion must all be specified for any of them to take effect";
 
     public static final String ENABLE_POST_PROCESS_FILE = "enablePostProcessFile";
+    public static final String ENABLE_USE_ONE_OF_INTERFACES = "useOneOfInterfaces";
     public static final String ENABLE_POST_PROCESS_FILE_DESC = "Enable post-processing file using environment variables.";
 
     public static final String OPEN_API_SPEC_NAME = "openAPISpecName";

@@ -403,6 +403,11 @@ public class DefaultCodegen implements CodegenConfig {
                     .get(CodegenConstants.ENABLE_POST_PROCESS_FILE).toString()));
         }
 
+        if (additionalProperties.containsKey(CodegenConstants.ENABLE_USE_ONE_OF_INTERFACES)) {
+            this.setUseOneOfInterfaces(Boolean.parseBoolean(additionalProperties
+                    .get(CodegenConstants.ENABLE_USE_ONE_OF_INTERFACES).toString()));
+        }
+
         if (additionalProperties.containsKey(CodegenConstants.GENERATE_ALIAS_AS_MODEL)) {
             ModelUtils.setGenerateAliasAsModel(Boolean.parseBoolean(additionalProperties
                     .get(CodegenConstants.GENERATE_ALIAS_AS_MODEL).toString()));

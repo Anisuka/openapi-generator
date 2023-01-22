@@ -57,7 +57,7 @@ public class ApiClient {
   public interface Api {}
 
   {{#jackson}}
-  protected ObjectMapper objectMapper;
+  protected final static ObjectMapper objectMapper = createObjectMapper();
   {{/jackson}}
   private String basePath = "{{{basePath}}}";
   private Map<String, RequestInterceptor> apiAuthorizations;
@@ -66,7 +66,6 @@ public class ApiClient {
   public ApiClient() {
     apiAuthorizations = new LinkedHashMap<String, RequestInterceptor>();
     {{#jackson}}
-    objectMapper = createObjectMapper();
     feignBuilder = Feign.builder()
                 .client(new OkHttpClient())
                 .encoder(new FormEncoder(new JacksonEncoder(objectMapper)))
@@ -89,7 +88,7 @@ public class ApiClient {
     {{/gson}}
   }
 
-  public ApiClient(String[] authNames) {
+  public ApiClient(String[] authNames, String tokenUrl) {
     this();
     for(String authName : authNames) {
       log.log(Level.FINE, "Creating authentication {0}", authName);
@@ -108,7 +107,7 @@ public class ApiClient {
         auth = new ApiKeyAuth({{#isKeyInHeader}}"header"{{/isKeyInHeader}}{{#isKeyInQuery}}"query"{{/isKeyInQuery}}{{#isKeyInCookie}}"cookie"{{/isKeyInCookie}}, "{{keyParamName}}");
       {{/isApiKey}}
       {{#isOAuth}}
-        auth = buildOauthRequestInterceptor(OAuthFlow.{{#lambda.uppercase}}{{#lambda.snakecase}}{{flow}}{{/lambda.snakecase}}{{/lambda.uppercase}}, "{{{authorizationUrl}}}", "{{{tokenUrl}}}", "{{#scopes}}{{scope}}{{^-last}}, {{/-last}}{{/scopes}}");
+        auth = buildOauthRequestInterceptor(OAuthFlow.{{#lambda.uppercase}}{{#lambda.snakecase}}{{flow}}{{/lambda.snakecase}}{{/lambda.uppercase}}, "{{{authorizationUrl}}}", tokenUrl, "{{#scopes}}{{scope}}{{^-last}}, {{/-last}}{{/scopes}}");
       {{/isOAuth}}
       } else {{/authMethods}}{
         throw new RuntimeException("auth name \"" + authName + "\" not found in available auth names");
@@ -125,8 +124,8 @@ public class ApiClient {
    * Basic constructor for single auth name
    * @param authName
    */
-  public ApiClient(String authName) {
-    this(new String[]{authName});
+  public ApiClient(String authName, String tokenUrl) {
+    this(new String[]{authName}, tokenUrl);
   }
 
   /**
@@ -134,8 +133,8 @@ public class ApiClient {
    * @param authName
    * @param apiKey
    */
-  public ApiClient(String authName, String apiKey) {
-    this(authName);
+  public ApiClient(String authName, String apiKey, String tokenUrl) {
+    this(authName, tokenUrl);
     this.setApiKey(apiKey);
   }
 
@@ -166,10 +165,11 @@ public class ApiClient {
   }
 
   {{#jackson}}
-  private ObjectMapper createObjectMapper() {
+  private static ObjectMapper createObjectMapper() {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
     objectMapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+    objectMapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL);
     objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     objectMapper.disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE);
     objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -203,10 +203,6 @@ public class ApiClient {
   {{#jackson}}
   public ObjectMapper getObjectMapper(){
     return objectMapper;
-  }
-
-  public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
   }
   {{/jackson}}
 
@@ -305,16 +301,6 @@ public class ApiClient {
   public void setOauthPassword(String username, String password, String clientId, String clientSecret) {
     OauthPasswordGrant apiAuthorization = getAuthorization(OauthPasswordGrant.class);
     apiAuthorization.configure(username, password, clientId, clientSecret);
-  }
-
-  /**
-   * Helper method to pre-set the oauth access token of the first oauth found in the apiAuthorizations (there should be only one)
-   * @param accessToken Access Token
-   * @param expiresIn Validity period in seconds
-   */
-  public void setAccessToken(String accessToken, Integer expiresIn) {
-    OAuth apiAuthorization = getAuthorization(OAuth.class);
-    apiAuthorization.setAccessToken(accessToken, expiresIn);
   }
 
   /**

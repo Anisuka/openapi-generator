@@ -19,8 +19,9 @@ public abstract class OAuth implements RequestInterceptor {
     void notify(OAuth2AccessToken token);
   }
 
-  private volatile String accessToken;
-  private Long expirationTimeSeconds;
+  private static volatile String accessToken;
+  protected static volatile String refreshToken;
+  private static volatile Long expirationTimeSeconds;
   private AccessTokenListener accessTokenListener;
 
   protected OAuth20Service service;
@@ -60,7 +61,7 @@ public abstract class OAuth implements RequestInterceptor {
     OAuth2AccessToken accessTokenResponse;
     accessTokenResponse = getOAuth2AccessToken();
     if (accessTokenResponse != null && accessTokenResponse.getAccessToken() != null) {
-      setAccessToken(accessTokenResponse.getAccessToken(), accessTokenResponse.getExpiresIn());
+      setAccessToken(accessTokenResponse.getAccessToken(),accessTokenResponse.getRefreshToken(),  accessTokenResponse.getExpiresIn());
       if (accessTokenListener != null) {
         accessTokenListener.notify(accessTokenResponse);
       }
@@ -88,8 +89,9 @@ public abstract class OAuth implements RequestInterceptor {
    * @param accessToken The access token
    * @param expiresIn Seconds until the token expires
    */
-  public synchronized void setAccessToken(String accessToken, Integer expiresIn) {
+  public synchronized void setAccessToken(String accessToken, String refreshToken, Integer expiresIn) {
     this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
     this.expirationTimeSeconds = expiresIn == null ? null : System.currentTimeMillis() / MILLIS_PER_SECOND + expiresIn - LEEWAY_SECONDS;
   }
 

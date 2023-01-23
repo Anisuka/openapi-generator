@@ -1188,7 +1188,7 @@ public class JavaJAXRSSpecServerCodegenTest extends JavaJaxrsBaseTest {
                 .collect(Collectors.toMap(File::getName, Function.identity()));
 
         JavaFileAssert.assertThat(files.get("Color.java"))
-                .assertMethod("fromValue").bodyContainsLines("return UNKNOWN_DEFAULT_OPEN_API");
+                .assertMethod("fromValue").bodyContainsLines("return VALEUR_INCONNUE");
 
     }
 

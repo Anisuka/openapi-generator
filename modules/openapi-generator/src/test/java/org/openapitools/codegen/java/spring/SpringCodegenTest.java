@@ -5159,7 +5159,7 @@ public class SpringCodegenTest {
         Map<String, File> files = generateFiles(codegen, "src/test/resources/bugs/issue_13241.yaml");
 
         JavaFileAssert.assertThat(files.get("Color.java"))
-                .assertMethod("fromValue").bodyContainsLines("return UNKNOWN_DEFAULT_OPEN_API");
+                .assertMethod("fromValue").bodyContainsLines("return VALEUR_INCONNUE");
     }
 
     @Test

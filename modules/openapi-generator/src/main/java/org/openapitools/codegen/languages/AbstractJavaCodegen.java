@@ -549,7 +549,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
         if (additionalProperties.containsKey(HATEOAS_ENABLED)) {
             this.setHateoasEnabled(Boolean.parseBoolean(additionalProperties.get(HATEOAS_ENABLED).toString()));
         } else {
-            additionalProperties.put(CodegenConstants.DEVELOPER_ORGANIZATION_URL, hateoasEnabled);
+            additionalProperties.put(CodegenConstants.HATEOAS_ENABLED, hateoasEnabled);
         }
 
         convertPropertyToStringAndWriteBack(CodegenConstants.MODEL_PACKAGE, this::setModelPackage);
@@ -1338,7 +1338,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
                 return toArrayDefaultValue(cp, schema);
             } else if (schema.getDefault() == null) {
                 // nullable or containerDefaultToNull set to true
-                if (cp.isNullable || !cp.required || containerDefaultToNull) {
+                if (cp.isNullable || containerDefaultToNull) {
                     return null;
                 }
                 return getDefaultCollectionType(schema);

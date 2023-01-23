@@ -339,7 +339,7 @@ public class {{classname}} {{#parent}}extends {{{.}}} {{/parent}}{{#vendorExtens
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class {{classname}} {\n");
+    sb.append("{\n");
     {{#parent}}
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     {{/parent}}

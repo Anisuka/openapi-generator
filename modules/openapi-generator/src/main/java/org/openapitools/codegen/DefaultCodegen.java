@@ -544,7 +544,7 @@ public class DefaultCodegen implements CodegenConfig {
                 List<Map<String, String>> modelsImports = modelsAttrs.getImportsOrEmpty();
                 for (ModelMap mo : modelsAttrs.getModels()) {
                     CodegenModel cm = mo.getModel();
-                    if (cm.oneOf.size() > 0) {
+                    if (cm.oneOf.size() > 0 && mo.getModel().getDiscriminator() != null) {
                         cm.vendorExtensions.put("x-is-one-of-interface", true);
                         for (String one : cm.oneOf) {
                             if (!additionalDataMap.containsKey(one)) {

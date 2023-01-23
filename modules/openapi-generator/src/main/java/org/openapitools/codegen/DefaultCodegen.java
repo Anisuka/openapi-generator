@@ -288,7 +288,7 @@ public class DefaultCodegen implements CodegenConfig {
     protected boolean enablePostProcessFile = false;
     private TemplatingEngineAdapter templatingEngine = new MustacheEngineAdapter();
     // flag to indicate whether to use the utils.OneOfImplementorAdditionalData related logic
-    protected boolean useOneOfInterfaces = false;
+    @Setter protected boolean useOneOfInterfaces = false;
     // whether or not the oneOf imports machinery should add oneOf interfaces as imports in implementing classes
     protected boolean addOneOfInterfaceImports = false;
     protected List<CodegenModel> addOneOfInterfaces = new ArrayList<>();
@@ -404,6 +404,8 @@ public class DefaultCodegen implements CodegenConfig {
             parseDefaultToEmptyContainer((String) additionalProperties.get(DEFAULT_TO_EMPTY_CONTAINER));
             defaultToEmptyContainer = true;
         }
+
+        convertPropertyToBooleanAndWriteBack(CodegenConstants.ENABLE_USE_ONE_OF_INTERFACES, this::setUseOneOfInterfaces);
     }
 
     /***
@@ -1480,10 +1482,6 @@ public class DefaultCodegen implements CodegenConfig {
 
     public Boolean getUseOneOfInterfaces() {
         return useOneOfInterfaces;
-    }
-
-    public void setUseOneOfInterfaces(Boolean useOneOfInterfaces) {
-        this.useOneOfInterfaces = useOneOfInterfaces;
     }
 
     /**

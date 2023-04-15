@@ -102,6 +102,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
     public static final String USE_JAKARTA_EE = "useJakartaEe";
     public static final String CONTAINER_DEFAULT_TO_NULL = "containerDefaultToNull";
     public static final String DISABLE_DISCRIMINATOR_JSON_IGNORE_PROPERTIES = "disableDiscriminatorJsonIgnoreProperties";
+    public static final String HATEOAS_ENABLED = "hateosEnabled";
 
     public static final String CAMEL_CASE_DOLLAR_SIGN = "camelCaseDollarSign";
     public static final String USE_ONE_OF_INTERFACES = "useOneOfInterfaces";
@@ -176,6 +177,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
     @Setter protected String parentArtifactId = "";
     @Setter protected String parentVersion = "";
     @Setter protected boolean parentOverridden = false;
+    @Setter protected boolean hateoasEnabled = false;
     @Getter @Setter
     protected List<String> additionalModelTypeAnnotations = new LinkedList<>();
     protected Map<String, Boolean> lombokAnnotations = null;
@@ -323,6 +325,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
         cliOptions.add(CliOption.newBoolean(CodegenConstants.HIDE_GENERATION_TIMESTAMP, CodegenConstants.HIDE_GENERATION_TIMESTAMP_DESC, this.isHideGenerationTimestamp()));
         cliOptions.add(CliOption.newBoolean(WITH_XML, "whether to include support for application/xml content type and include XML annotations in the model (works with libraries that provide support for JSON and XML)"));
         cliOptions.add(CliOption.newBoolean(USE_ONE_OF_INTERFACES, "whether to use a java interface to describe a set of oneOf options, where each option is a class that implements the interface"));
+        cliOptions.add(CliOption.newBoolean(CodegenConstants.HATEOAS_ENABLED, "whether path will be injdex or not when generating client api", this.hateoasEnabled));
 
         CliOption dateLibrary = new CliOption(DATE_LIBRARY, "Option. Date library to use").defaultValue(this.getDateLibrary());
         Map<String, String> dateOptions = new HashMap<>();
@@ -543,6 +546,12 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
             additionalProperties.put(CodegenConstants.DEVELOPER_ORGANIZATION_URL, developerOrganizationUrl);
         }
 
+        if (additionalProperties.containsKey(HATEOAS_ENABLED)) {
+            this.setHateoasEnabled(Boolean.parseBoolean(additionalProperties.get(HATEOAS_ENABLED).toString()));
+        } else {
+            additionalProperties.put(CodegenConstants.DEVELOPER_ORGANIZATION_URL, hateoasEnabled);
+        }
+
         convertPropertyToStringAndWriteBack(CodegenConstants.MODEL_PACKAGE, this::setModelPackage);
         convertPropertyToStringAndWriteBack(CodegenConstants.API_PACKAGE, this::setApiPackage);
         convertPropertyToStringAndWriteBack(CodegenConstants.GROUP_ID, this::setGroupId);
@@ -569,6 +578,8 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
         // that indicates the lookup should be case insensitive. However, some implementations perform
         // a case-insensitive lookup.
         convertPropertyToBooleanAndWriteBack(DISCRIMINATOR_CASE_SENSITIVE, this::setDiscriminatorCaseSensitive);
+        convertPropertyToBooleanAndWriteBack(CodegenConstants.HATEOAS_ENABLED, this::setHateoasEnabled);
+
         convertPropertyToBooleanAndWriteBack(WITH_XML, this::setWithXml);
         convertPropertyToBooleanAndWriteBack(OPENAPI_NULLABLE, this::setOpenApiNullable);
         convertPropertyToStringAndWriteBack(CodegenConstants.PARENT_GROUP_ID, this::setParentGroupId);
@@ -1327,7 +1338,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
                 return toArrayDefaultValue(cp, schema);
             } else if (schema.getDefault() == null) {
                 // nullable or containerDefaultToNull set to true
-                if (cp.isNullable || containerDefaultToNull) {
+                if (cp.isNullable || !cp.required || containerDefaultToNull) {
                     return null;
                 }
                 return getDefaultCollectionType(schema);

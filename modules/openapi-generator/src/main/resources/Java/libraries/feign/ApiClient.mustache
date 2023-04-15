@@ -49,6 +49,7 @@ import {{invokerPackage}}.auth.OAuth.AccessTokenListener;
 import {{invokerPackage}}.auth.OAuthFlow;
 import {{invokerPackage}}.auth.OauthPasswordGrant;
 import {{invokerPackage}}.auth.OauthClientCredentialsGrant;
+import {{invokerPackage}}.auth.OauthAccessCodeGrant;
 import feign.Retryer;
 {{/hasOAuthMethods}}
 
@@ -201,6 +202,8 @@ public class ApiClient {
         return new OauthPasswordGrant(tokenUrl, scopes);
       case APPLICATION:
         return new OauthClientCredentialsGrant(authorizationUrl, tokenUrl, scopes);
+      case ACCESS_CODE:
+        return new OauthAccessCodeGrant(authorizationUrl, tokenUrl);
       default:
         throw new RuntimeException("Oauth flow \"" + flow + "\" is not implemented");
     }
@@ -319,6 +322,23 @@ public class ApiClient {
     OauthPasswordGrant apiAuthorization = getAuthorization(OauthPasswordGrant.class);
     apiAuthorization.configure(username, password, clientId, clientSecret);
   }
+
+    /**
+     * Helper method to init authorization for access code flow
+     */
+    public void setupOauthCode(String clientId, String clientSecret, String callBackUrl, String code) {
+      OauthAccessCodeGrant apiAuthorization = getAuthorization(OauthAccessCodeGrant.class);
+      apiAuthorization.configure(clientId, clientSecret, callBackUrl);
+      apiAuthorization.setCode(code);
+    }
+
+    /**
+     * Helper method to init authorization for access code flow
+     */
+    public void updateOauthCode(String code) {
+      OauthAccessCodeGrant apiAuthorization = getAuthorization(OauthAccessCodeGrant.class);
+      apiAuthorization.setCode(code);
+    }
 
   /**
    * Helper method to configure the oauth accessCode/implicit flow parameters

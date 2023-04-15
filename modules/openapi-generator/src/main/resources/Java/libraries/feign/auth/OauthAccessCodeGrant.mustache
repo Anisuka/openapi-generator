@@ -1,0 +1,44 @@
+package {{invokerPackage}}.auth;
+
+import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.model.OAuth2AccessToken;
+
+{{>generatedAnnotation}}
+public class OauthAccessCodeGrant extends OAuth {
+  private String code;
+
+  public OauthAccessCodeGrant(String authorizationUrl, String tokenUrl) {
+    super(authorizationUrl, tokenUrl, null);
+  }
+
+  @Override
+  protected OAuth2AccessToken getOAuth2AccessToken() {
+    try {
+      return service.getAccessToken(code);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to get oauth token", e);
+    }
+  }
+
+  @Override
+  protected OAuthFlow getFlow() {
+    return OAuthFlow.ACCESS_CODE;
+  }
+
+  /**
+   * Configures the client credentials flow
+   *
+   * @param clientId
+   * @param clientSecret
+   */
+  public void configure(String clientId, String clientSecret, String callBackUrl) {
+    service = new ServiceBuilder(clientId)
+            .apiSecret(clientSecret)
+            .callback(callBackUrl)
+            .build(new DefaultApi20Impl(authorizationUrl, tokenUrl));
+  }
+
+  public void setCode(String code){
+    this.code = code;
+  }
+}

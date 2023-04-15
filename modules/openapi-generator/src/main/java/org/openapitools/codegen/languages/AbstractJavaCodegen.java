@@ -86,6 +86,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
     public static final String JAVAX_PACKAGE = "javaxPackage";
     public static final String USE_JAKARTA_EE = "useJakartaEe";
     public static final String CONTAINER_DEFAULT_TO_NULL = "containerDefaultToNull";
+    public static final String HATEOAS_ENABLED = "hateosEnabled";
 
     public static final String CAMEL_CASE_DOLLAR_SIGN = "camelCaseDollarSign";
 
@@ -141,6 +142,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
     protected boolean camelCaseDollarSign = false;
     protected boolean useJakartaEe = false;
     protected boolean containerDefaultToNull = false;
+    protected boolean hateoasEnabled;
 
     private Map<String, String> schemaKeyToModelNameCache = new HashMap<>();
 
@@ -256,6 +258,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
         cliOptions.add(CliOption.newBoolean(DISCRIMINATOR_CASE_SENSITIVE, "Whether the discriminator value lookup should be case-sensitive or not. This option only works for Java API client", discriminatorCaseSensitive));
         cliOptions.add(CliOption.newBoolean(CodegenConstants.HIDE_GENERATION_TIMESTAMP, CodegenConstants.HIDE_GENERATION_TIMESTAMP_DESC, this.isHideGenerationTimestamp()));
         cliOptions.add(CliOption.newBoolean(WITH_XML, "whether to include support for application/xml content type and include XML annotations in the model (works with libraries that provide support for JSON and XML)"));
+        cliOptions.add(CliOption.newBoolean(HATEOAS_ENABLED, "whether path will be injdex or not when generating client api", hateoasEnabled));
 
         CliOption dateLibrary = new CliOption(DATE_LIBRARY, "Option. Date library to use").defaultValue(this.getDateLibrary());
         Map<String, String> dateOptions = new HashMap<>();
@@ -524,6 +527,9 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
         if (additionalProperties.containsKey(FULL_JAVA_UTIL)) {
             this.setFullJavaUtil(Boolean.parseBoolean(additionalProperties.get(FULL_JAVA_UTIL).toString()));
         }
+        if (additionalProperties.containsKey(HATEOAS_ENABLED)) {
+            this.setHateoasEnabled(Boolean.parseBoolean(additionalProperties.get(HATEOAS_ENABLED).toString()));
+        }
         if (additionalProperties.containsKey(DISCRIMINATOR_CASE_SENSITIVE)) {
             this.setDiscriminatorCaseSensitive(Boolean.parseBoolean(additionalProperties.get(DISCRIMINATOR_CASE_SENSITIVE).toString()));
         } else {
@@ -538,6 +544,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
             javaUtilPrefix = "java.util.";
         }
         additionalProperties.put(FULL_JAVA_UTIL, fullJavaUtil);
+        additionalProperties.put(HATEOAS_ENABLED, hateoasEnabled);
         additionalProperties.put("javaUtilPrefix", javaUtilPrefix);
 
         if (additionalProperties.containsKey(WITH_XML)) {
@@ -1950,6 +1957,10 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
 
     public void setFullJavaUtil(boolean fullJavaUtil) {
         this.fullJavaUtil = fullJavaUtil;
+    }
+
+    public void setHateoasEnabled(boolean hateoasEnabled) {
+        this.hateoasEnabled = hateoasEnabled;
     }
 
     /**

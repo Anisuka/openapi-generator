@@ -4,7 +4,7 @@ import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-
+import org.slf4j.MDC;
 import java.util.Collection;
 
 {{>generatedAnnotation}}
@@ -45,6 +45,10 @@ public abstract class OAuth implements RequestInterceptor {
     if (accessToken != null) {
       template.removeHeader("Authorization");
       template.header("Authorization", "Bearer " + accessToken);
+    }
+    String correlationID = MDC.get("traceabilityID");
+    if (correlationID != null && !correlationID.isBlank()){
+      template.header("axa-correlation-id", correlationID);
     }
   }
 

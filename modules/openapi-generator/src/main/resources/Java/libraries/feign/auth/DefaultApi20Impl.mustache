@@ -7,17 +7,31 @@ import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.oauth2.bearersignature.BearerSignature;
 import com.github.scribejava.core.oauth2.bearersignature.BearerSignatureURIQueryParameter;
 import com.github.scribejava.core.oauth2.clientauthentication.ClientAuthentication;
+import com.github.scribejava.core.oauth2.clientauthentication.JWTAuthenticationScheme;
 import com.github.scribejava.core.oauth2.clientauthentication.RequestBodyAuthenticationScheme;
+import java.security.interfaces.RSAPrivateKey;
 
 {{>generatedAnnotation}}
 public class DefaultApi20Impl extends DefaultApi20 {
 
     private final String accessTokenEndpoint;
     private final String authorizationBaseUrl;
+    private final RSAPrivateKey privateKey;
+    private final String keyId;
+
 
     protected DefaultApi20Impl(String authorizationBaseUrl, String accessTokenEndpoint) {
         this.authorizationBaseUrl = authorizationBaseUrl;
         this.accessTokenEndpoint = accessTokenEndpoint;
+        this.privateKey = null;
+        this.keyId = null;
+    }
+
+    protected DefaultApi20Impl(String authorizationBaseUrl, String accessTokenEndpoint, RSAPrivateKey privateKey, String keyId) {
+        this.authorizationBaseUrl = authorizationBaseUrl;
+        this.accessTokenEndpoint = accessTokenEndpoint;
+        this.privateKey = privateKey;
+        this.keyId = keyId;
     }
 
     @Override
@@ -37,7 +51,11 @@ public class DefaultApi20Impl extends DefaultApi20 {
 
     @Override
     public ClientAuthentication getClientAuthentication() {
-        return RequestBodyAuthenticationScheme.instance();
+        if (keyId != null && privateKey != null) {
+            return JWTAuthenticationScheme.instance(privateKey, accessTokenEndpoint, keyId);
+        } else {
+            return RequestBodyAuthenticationScheme.instance();
+        }
     }
 
     @Override

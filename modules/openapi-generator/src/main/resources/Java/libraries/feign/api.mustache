@@ -45,6 +45,8 @@ public interface {{classname}} extends ApiClient.Api {
 {{/isDeprecated}}
   @RequestLine("{{httpMethod}} {{^hateosEnabled}}{{{path}}}{{/hateosEnabled}}{{#hasQueryParams}}?{{/hasQueryParams}}{{#queryParams}}{{baseName}}={{=<% %>=}}{<%paramName%>}<%={{ }}=%>{{^-last}}&{{/-last}}{{/queryParams}}")
   @Headers({
+{{#hateosEnabled}}    "axa-feature: id=00000000-0000-0000-0000-000000000000, name={{nickname}}",
+{{/hateosEnabled}}
 {{#vendorExtensions.x-content-type}}    "Content-Type: {{vendorExtensions.x-content-type}}",
 {{/vendorExtensions.x-content-type}}    "Accept: {{vendorExtensions.x-accepts}}",{{#headerParams}}
     "{{baseName}}: {{=<% %>=}}{<%paramName%>}<%={{ }}=%>"{{^-last}},
@@ -75,6 +77,8 @@ public interface {{classname}} extends ApiClient.Api {
 {{/isDeprecated}}
   @RequestLine("{{httpMethod}} {{^hateosEnabled}}{{{path}}}{{/hateosEnabled}}{{#hasQueryParams}}?{{/hasQueryParams}}{{#queryParams}}{{baseName}}={{=<% %>=}}{<%paramName%>}<%={{ }}=%>{{^-last}}&{{/-last}}{{/queryParams}}")
   @Headers({
+{{#hateosEnabled}}    "axa-feature: id=00000000-0000-0000-0000-000000000000, name={{nickname}}",
+{{/hateosEnabled}}
 {{#vendorExtensions.x-content-type}}    "Content-Type: {{vendorExtensions.x-content-type}}",
 {{/vendorExtensions.x-content-type}}    "Accept: {{vendorExtensions.x-accepts}}",{{#headerParams}}
     "{{baseName}}: {{=<% %>=}}{<%paramName%>}<%={{ }}=%>"{{^-last}},
@@ -120,6 +124,8 @@ public interface {{classname}} extends ApiClient.Api {
   {{/isDeprecated}}
   @RequestLine("{{httpMethod}} {{^hateosEnabled}}{{{path}}}{{/hateosEnabled}}?{{#queryParams}}{{baseName}}={{=<% %>=}}{<%paramName%>}<%={{ }}=%>{{^-last}}&{{/-last}}{{/queryParams}}")
   @Headers({
+{{#hateosEnabled}}    "axa-feature: id=00000000-0000-0000-0000-000000000000, name={{nickname}}",
+{{/hateosEnabled}}
 {{#vendorExtensions.x-content-type}}  "Content-Type: {{vendorExtensions.x-content-type}}",
 {{/vendorExtensions.x-content-type}}  "Accept: {{vendorExtensions.x-accepts}}",{{#headerParams}}
       "{{baseName}}: {{=<% %>=}}{<%paramName%>}<%={{ }}=%>"{{^-last}},
@@ -160,6 +166,8 @@ public interface {{classname}} extends ApiClient.Api {
   {{/isDeprecated}}
       @RequestLine("{{httpMethod}} {{^hateosEnabled}}{{{path}}}{{/hateosEnabled}}?{{#queryParams}}{{baseName}}={{=<% %>=}}{<%paramName%>}<%={{ }}=%>{{^-last}}&{{/-last}}{{/queryParams}}")
       @Headers({
+  {{#hateosEnabled}}    "axa-feature: id=00000000-0000-0000-0000-000000000000, name={{nickname}}",
+  {{/hateosEnabled}}
   {{#vendorExtensions.x-content-type}}  "Content-Type: {{vendorExtensions.x-content-type}}",
   {{/vendorExtensions.x-content-type}}  "Accept: {{vendorExtensions.x-accepts}}",{{#headerParams}}
           "{{baseName}}: {{=<% %>=}}{<%paramName%>}<%={{ }}=%>"{{^-last}},

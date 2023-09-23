@@ -2,6 +2,7 @@
 
 package {{invokerPackage}};
 
+import java.security.interfaces.RSAPrivateKey;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -202,7 +203,7 @@ public class ApiClient {
         return new OauthPasswordGrant(tokenUrl, scopes);
       case APPLICATION:
         return new OauthClientCredentialsGrant(authorizationUrl, tokenUrl, scopes);
-      case ACCESS_CODE:
+          case ACCESS_CODE:
         return new OauthAccessCodeGrant(authorizationUrl, tokenUrl);
       default:
         throw new RuntimeException("Oauth flow \"" + flow + "\" is not implemented");
@@ -310,6 +311,26 @@ public class ApiClient {
     OauthClientCredentialsGrant authorization = getAuthorization(OauthClientCredentialsGrant.class);
     authorization.configure(clientId, clientSecret);
   }
+
+  public void setClientCredentials(String clientId, String clientSecret, String scopes) {
+    OauthClientCredentialsGrant authorization = getAuthorization(OauthClientCredentialsGrant.class);
+    authorization.configure(clientId, clientSecret, scopes);
+  }
+
+    /**
+     * Helper method to configure the client credentials for Oauth
+     * @param clientId Client ID
+     * @param clientSecret Client secret
+     */
+    public void setClientCredentials(String clientId, String keyId, RSAPrivateKey privateKey) {
+      OauthClientCredentialsGrant authorization = getAuthorization(OauthClientCredentialsGrant.class);
+      authorization.configure(clientId, keyId, privateKey);
+    }
+
+    public void setClientCredentials(String clientId, String scope, String keyId, RSAPrivateKey privateKey) {
+      OauthClientCredentialsGrant authorization = getAuthorization(OauthClientCredentialsGrant.class);
+      authorization.configure(clientId, keyId, privateKey, scope);
+    }
 
   /**
    * Helper method to configure the username/password for Oauth password grant

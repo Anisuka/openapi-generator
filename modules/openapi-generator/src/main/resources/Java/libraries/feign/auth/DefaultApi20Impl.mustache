@@ -21,6 +21,7 @@ public class DefaultApi20Impl extends DefaultApi20 {
     private final String authorizationBaseUrl;
     private final RSAPrivateKey privateKey;
     private final String keyId;
+    private final String audience;
 
 
     protected DefaultApi20Impl(String authorizationBaseUrl, String accessTokenEndpoint) {
@@ -28,13 +29,15 @@ public class DefaultApi20Impl extends DefaultApi20 {
         this.accessTokenEndpoint = accessTokenEndpoint;
         this.privateKey = null;
         this.keyId = null;
+        this.audience = null;
     }
 
-    protected DefaultApi20Impl(String authorizationBaseUrl, String accessTokenEndpoint, RSAPrivateKey privateKey, String keyId) {
+    protected DefaultApi20Impl(String authorizationBaseUrl, String accessTokenEndpoint,String audience, RSAPrivateKey privateKey, String keyId) {
         this.authorizationBaseUrl = authorizationBaseUrl;
         this.accessTokenEndpoint = accessTokenEndpoint;
         this.privateKey = privateKey;
         this.keyId = keyId;
+        this.audience = audience;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class DefaultApi20Impl extends DefaultApi20 {
     @Override
     public ClientAuthentication getClientAuthentication() {
         if (keyId != null && privateKey != null) {
-            return JWTAuthenticationScheme.instance(privateKey, accessTokenEndpoint, keyId);
+            return JWTAuthenticationScheme.instance(privateKey, audience, keyId);
         } else {
             return RequestBodyAuthenticationScheme.instance();
         }

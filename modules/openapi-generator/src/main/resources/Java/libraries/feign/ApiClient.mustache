@@ -322,14 +322,14 @@ public class ApiClient {
      * @param clientId Client ID
      * @param clientSecret Client secret
      */
-    public void setClientCredentials(String clientId, String keyId, RSAPrivateKey privateKey) {
+    public void setClientCredentials(String clientId, String audience, String keyId, RSAPrivateKey privateKey) {
       OauthClientCredentialsGrant authorization = getAuthorization(OauthClientCredentialsGrant.class);
-      authorization.configure(clientId, keyId, privateKey);
+      authorization.configure(clientId, audience, keyId, privateKey);
     }
 
-    public void setClientCredentials(String clientId, String scope, String keyId, RSAPrivateKey privateKey) {
+    public void setClientCredentials(String clientId, String audience, String scope, String keyId, RSAPrivateKey privateKey) {
       OauthClientCredentialsGrant authorization = getAuthorization(OauthClientCredentialsGrant.class);
-      authorization.configure(clientId, keyId, privateKey, scope);
+      authorization.configure(clientId, audience, keyId, privateKey, scope);
     }
 
   /**

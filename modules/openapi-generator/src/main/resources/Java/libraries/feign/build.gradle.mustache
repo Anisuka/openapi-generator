@@ -6,7 +6,12 @@ version = '{{artifactVersion}}'
 
 buildscript {
     repositories {
-        mavenCentral()
+        maven {
+            url 'https://afa-nrepo.azure-paas.intraxa/repository/thirdparty-guidewire/'
+        }
+        maven {
+            url 'https://afa-nrepo.azure-paas.intraxa/repository/maven-group/'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.+'
@@ -15,7 +20,12 @@ buildscript {
 }
 
 repositories {
-    mavenCentral()
+    maven {
+        url 'https://afa-nrepo.azure-paas.intraxa/repository/thirdparty-guidewire/'
+    }
+    maven {
+        url 'https://afa-nrepo.azure-paas.intraxa/repository/maven-group/'
+    }
 }
 
 
@@ -116,7 +126,7 @@ ext {
     commons_lang3_version = "3.17.0"
     {{/useReflectionEqualsHashCode}}
     junit_version = "5.9.2"
-    scribejava_version = "8.3.3"
+    scribejava_version = "8.3.3.2"
     wiremock_jre8_version = "2.35.0"
     commons_io_version = "2.11.0"
     logback_classic_version = "1.4.5"
@@ -151,7 +161,7 @@ dependencies {
     implementation "org.openapitools:jackson-databind-nullable:$jackson_databind_nullable_version"
     {{/openApiNullable}}
     implementation "com.brsanthu:migbase64:2.2"
-    implementation "com.github.scribejava:scribejava-core:$scribejava_version"
+    implementation "com.axa.solaris:scribejava-core:$scribejava_version"
     implementation "com.brsanthu:migbase64:2.2"
     implementation "jakarta.annotation:jakarta.annotation-api:$jakarta_annotation_version"
     {{#useReflectionEqualsHashCode}}

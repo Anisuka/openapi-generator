@@ -24,6 +24,9 @@ import {{import}};
 {{#serializableModel}}
 import java.io.Serializable;
 {{/serializableModel}}
+{{#enumUnknownDefaultCase}}
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+{{/enumUnknownDefaultCase}}
 {{#jackson}}
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;

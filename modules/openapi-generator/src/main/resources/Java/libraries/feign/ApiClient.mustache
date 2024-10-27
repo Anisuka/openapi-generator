@@ -182,6 +182,9 @@ public class ApiClient {
     {{/failOnUnknownProperties}}
     objectMapper.disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE);
     objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    {{#enumUnknownDefaultCase}}
+    objectMapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
+    {{/enumUnknownDefaultCase}}
     objectMapper.setDateFormat(new RFC3339DateFormat());
     {{#joda}}
     objectMapper.registerModule(new JodaModule());

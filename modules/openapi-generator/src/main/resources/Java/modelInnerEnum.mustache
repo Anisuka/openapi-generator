@@ -23,11 +23,10 @@
     {{#withXml}}
     @XmlEnumValue({{#isInteger}}"{{/isInteger}}{{#isDouble}}"{{/isDouble}}{{#isLong}}"{{/isLong}}{{#isFloat}}"{{/isFloat}}{{{value}}}{{#isInteger}}"{{/isInteger}}{{#isDouble}}"{{/isDouble}}{{#isLong}}"{{/isLong}}{{#isFloat}}"{{/isFloat}})
     {{/withXml}}
-    {{#enumUnknownDefaultCase}}{{#-last}}@JsonEnumDefaultValue {{/-last}}{{/enumUnknownDefaultCase}}{{{name}}}({{^isUri}}{{dataType}}.valueOf({{/isUri}}{{{value}}}{{^isUri}}){{/isUri}}){{^-last}},
-    {{/-last}}{{#-last}};{{/-last}}
-      {{/enumVars}}
+    {{#-last}}{{#enumUnknownDefaultCase}}@JsonEnumDefaultValue{{/enumUnknownDefaultCase}}{{/-last}}
+    {{{name}}}({{^isUri}}{{dataType}}.valueOf({{/isUri}}{{{value}}}{{^isUri}}){{/isUri}}){{^-last}},{{/-last}}{{#-last}};{{/-last}}
+    {{/enumVars}}
     {{/allowableValues}}
-
     private {{{dataType}}} value;
 
     {{{datatypeWithEnum}}}{{^datatypeWithEnum}}{{classname}}{{/datatypeWithEnum}}({{{dataType}}} value) {

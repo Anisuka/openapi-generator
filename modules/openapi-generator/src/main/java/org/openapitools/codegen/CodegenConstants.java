@@ -415,7 +415,7 @@ public class CodegenConstants {
     public static final String UNSUPPORTED_V310_SPEC_MSG =
             "OpenAPI 3.1 support is still in beta. To report an issue related to 3.1 spec, please kindly open an issue in the Github repo: https://github.com/openAPITools/openapi-generator.";
 
-    public static final String ENUM_UNKNOWN_DEFAULT_CASE = "valeur inconnue";
+    public static final String ENUM_UNKNOWN_DEFAULT_CASE = "enumUnknownDefaultCase";
     public static final String ENUM_UNKNOWN_DEFAULT_CASE_DESC =
             "If the server adds new enum cases, that are unknown by an old spec/client, the client will fail to parse the network response." +
                     "With this option enabled, each enum will have a new case, 'unknown_default_open_api', so that when the server sends an enum case that is not known by the client/spec, they can safely fallback to this case.";

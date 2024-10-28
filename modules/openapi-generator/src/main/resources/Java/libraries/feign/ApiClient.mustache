@@ -24,6 +24,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 {{/jackson}}
 
+import feign.Client;
 import feign.Feign;
 import feign.RequestInterceptor;
 import feign.form.FormEncoder;
@@ -91,6 +92,31 @@ public class ApiClient {
         .logger(new Slf4jLogger());
     {{/gson}}
   }
+
+    public ApiClient(Client httpClient) {
+      apiAuthorizations = new LinkedHashMap<String, RequestInterceptor>();
+      {{#jackson}}
+      feignBuilder = Feign.builder()
+                  .client(httpClient)
+                  .encoder(new FormEncoder(new JacksonEncoder(objectMapper)))
+                  .decoder(new ApiResponseDecoder(objectMapper))
+                  {{#hasOAuthMethods}}
+                  .errorDecoder(new ApiErrorDecoder())
+                  .retryer(new Retryer.Default(0, 0, 2))
+                  {{/hasOAuthMethods}}
+                  .logger(new Slf4jLogger());
+      {{/jackson}}
+      {{#gson}}
+      feignBuilder = Feign.builder()
+          .encoder(new FormEncoder(new GsonEncoder()))
+          .decoder(new GsonDecoder())
+          {{#hasOAuthMethods}}
+          .errorDecoder(new ApiErrorDecoder())
+          .retryer(new Retryer.Default(0, 0, 2))
+          {{/hasOAuthMethods}}
+          .logger(new Slf4jLogger());
+      {{/gson}}
+    }
 
   public ApiClient(String[] authNames, String tokenUrl) {
     this();

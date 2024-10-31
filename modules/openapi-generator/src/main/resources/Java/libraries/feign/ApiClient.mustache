@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 {{#openApiNullable}}
 import org.openapitools.jackson.nullable.JsonNullableModule;
 {{/openApiNullable}}
@@ -211,6 +212,15 @@ public class ApiClient {
     {{#enumUnknownDefaultCase}}
     objectMapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
     {{/enumUnknownDefaultCase}}
+    {{^enumUnknownDefaultCase}}
+    objectMapper.disable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
+    {{/enumUnknownDefaultCase}}
+    {{#useEnumCaseInsensitive}}
+    objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
+    {{/useEnumCaseInsensitive}}
+    {{^useEnumCaseInsensitive}}
+    objectMapper.disable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
+    {{/useEnumCaseInsensitive}}
     objectMapper.setDateFormat(new RFC3339DateFormat());
     {{#joda}}
     objectMapper.registerModule(new JodaModule());

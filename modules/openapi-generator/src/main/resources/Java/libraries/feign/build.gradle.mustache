@@ -122,7 +122,9 @@ ext {
     jackson_databind_nullable_version = "0.2.6"
     {{/openApiNullable}}
     feign_version = "13.5"
+    {{#useJakartaEe}}
     jakarta_annotation_version = "2.1.1"
+    {{/useJakartaEe}}
     feign_form_version = "3.8.0"
     {{#useReflectionEqualsHashCode}}
     commons_lang3_version = "3.17.0"
@@ -130,7 +132,9 @@ ext {
     junit_version = "5.9.2"
     scribejava_version = "8.3.3.4"
     wiremock_jre8_version = "2.35.0"
+    {{^useJakartaEe}}
     javax_annotation_api_version = "1.3.2"
+    {{/useJakartaEe}}
 }
 
 dependencies {
@@ -163,7 +167,12 @@ dependencies {
     implementation "com.brsanthu:migbase64:2.2"
     implementation "com.axa.solaris:scribejava-core:$scribejava_version"
     implementation "com.brsanthu:migbase64:2.2"
+    {{#useJakartaEe}}
     implementation "jakarta.annotation:jakarta.annotation-api:$jakarta_annotation_version"
+    {{/useJakartaEe}}
+    {{^useJakartaEe}}
+    implementation "javax.annotation:javax.annotation-api:$javax_annotation_api_version"
+    {{/useJakartaEe}}
     {{#useReflectionEqualsHashCode}}
     implementation "org.apache.commons:commons-lang3:$commons_lang3_version"
     {{/useReflectionEqualsHashCode}}

@@ -223,7 +223,7 @@ public class {{classname}} {{#parent}}extends {{{.}}} {{/parent}}{{#vendorExtens
     {{^vendorExtensions.x-is-jackson-optional-nullable}}
     {{#isArray}}
     {{#required}}
-    return {{name}} != null ? {{name}} : Collections.emptyList();
+    return {{name}} != null ? {{name}} : {{#uniqueItems}}Collections.emptySet(){{/uniqueItems}}{{^uniqueItems}}Collections.emptyList(){{/uniqueItems}};
     {{/required}}
     {{^required}}
     return {{name}};

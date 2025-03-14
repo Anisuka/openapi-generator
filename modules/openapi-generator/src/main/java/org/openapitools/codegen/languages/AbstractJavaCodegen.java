@@ -57,6 +57,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.lang.model.SourceVersion;
 import java.io.File;
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -2211,8 +2212,9 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
                 }
                 break;
             default:
+                String normalize = Normalizer.normalize(value, Normalizer.Form.NFD);
                 // default to MACRO_CASE, e.g. WITH_NUMBER1
-                var = underscore(value.replaceAll("\\W+", "_")).toUpperCase(Locale.ROOT);
+                var = underscore(normalize.replaceAll("\\p{M}","").replaceAll("\\W+", "_")).toUpperCase(Locale.ROOT);
                 break;
         }
         if (var.matches("\\d.*")) {

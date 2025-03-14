@@ -83,6 +83,7 @@ public class AbstractJavaCodegenTest {
     public void toEnumVarNameShouldNotResultInSingleUnderscore() {
         codegen.setEnumPropertyNaming("MACRO_CASE");
         Assert.assertNotEquals(codegen.toEnumVarName(" ", "String"), "_");
+        Assert.assertEquals(codegen.toEnumVarName("Expertise à qualifier", "String"), "_");
         Assert.assertNotEquals(codegen.toEnumVarName("==", "String"), "_");
     }
 

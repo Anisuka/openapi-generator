@@ -64,7 +64,7 @@ public class ApiClient {
   public interface Api {}
 
   {{#jackson}}
-  protected final static ObjectMapper objectMapper = createObjectMapper();
+  protected final ObjectMapper objectMapper = createObjectMapper();
   {{/jackson}}
   protected String basePath = "{{{basePath}}}";
   protected Map<String, RequestInterceptor> apiAuthorizations;
@@ -226,7 +226,9 @@ public class ApiClient {
     objectMapper.registerModule(new JodaModule());
     {{/joda}}
     objectMapper.registerModule(new JavaTimeModule());
+    {{^jsr310}}
     objectMapper.registerModule(new RFC3339JavaTimeModule());
+    {{/jsr310}}
     {{#openApiNullable}}
     JsonNullableModule jnm = new JsonNullableModule();
     objectMapper.registerModule(jnm);
